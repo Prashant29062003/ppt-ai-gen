@@ -4,19 +4,20 @@
 import { PrismaClient } from "../../generated/prisma/client";
 
 import { PrismaPg } from "@prisma/adapter-pg";
+import { env } from "./env";
 
 const adapter = new PrismaPg({
-  connectionString: process.env.DATABASE_URL!,
+    connectionString: env.DATABASE_URL,
 });
 
 declare global {
-  var __prisma: PrismaClient | undefined;
+    var __prisma: PrismaClient | undefined;
 }
 
 // First this is to check if there is already an instance of PrismaClient stored in the global variable __prisma. If there is, it uses that instance. If not, it creates a new instance of PrismaClient using the adapter and assigns it to the global variable __prisma. This way, during development, only one instance of PrismaClient is created and reused across the application, while in production, a new instance is created each time.
 export const prisma = globalThis.__prisma || new PrismaClient({ adapter });
 
 // Finally, if the application is running in development mode (i.e., NODE_ENV is not set to "production"), it assigns the created PrismaClient instance to the global variable __prisma. This allows the instance to be reused across the application during development, preventing issues with multiple instances and connection pooling. In production, this step is skipped, and a new instance is created each time the module is imported.
-if (process.env.NODE_ENV !== "production") {
-  globalThis.__prisma = prisma;
+if (env.NODE_ENV !== "production") {
+    globalThis.__prisma = prisma;
 }

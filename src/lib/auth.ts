@@ -3,6 +3,7 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 import { tanstackStartCookies } from "better-auth/tanstack-start";
 // If your Prisma file is located elsewhere, you can change the path
 import { prisma } from "./db.js";
+import { env } from "./env";
 
 export const auth = betterAuth({
     database: prismaAdapter(prisma, {
@@ -10,8 +11,8 @@ export const auth = betterAuth({
     }),
     socialProviders: {
         github: {
-            clientId: process.env.GITHUB_CLIENT_ID!,
-            clientSecret: process.env.GITHUB_CLIENT_SECRET!,
+            clientId: env.GITHUB_CLIENT_ID!,
+            clientSecret: env.GITHUB_CLIENT_SECRET!,
         },
     },
     plugins: [tanstackStartCookies()]
